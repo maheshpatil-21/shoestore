@@ -22,8 +22,15 @@ const PORT = process.env.PORT || 5000;
 
 app.use(helmet({ contentSecurityPolicy: false })); // Security headers
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://127.0.0.1:5500', 'http://localhost:5500'],
-  credentials: true,
+  origin: [
+    'http://localhost:3000',
+    'http://127.0.0.1:5500',
+    'http://localhost:5500',
+    'https://shoestore-mahesh.netlify.app'
+  ],
+  methods: ['GET','POST','PUT','DELETE'],
+  allowedHeaders: ['Content-Type','Authorization'],
+  credentials: true
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
