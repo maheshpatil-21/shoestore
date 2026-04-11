@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account — ShoeStore</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="signup">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <span class="logo-icon">👟</span><span class="logo-text">ShoeStore</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+      </div>
+      <div class="nav-actions">
+        <a href="cart.html" class="cart-btn">🛒 Cart <span class="cart-count" style="display:none">0</span></a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- AUTH PAGE -->
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <span class="logo-icon">👟</span>
+        <span class="logo-name">ShoeStore</span>
+      </div>
+
+      <h2>Create account</h2>
+      <p class="auth-sub">Join thousands of happy ShoeStore customers</p>
+
+      <div id="success-msg" class="success-msg"></div>
+
+      <form id="signup-form">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="name" placeholder="John Doe" autocomplete="name">
+        </div>
+
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <div class="password-toggle">
+            <input type="password" id="password" placeholder="Create a strong password" autocomplete="new-password">
+            <button type="button" id="togglePassword" class="toggle-eye">👁</button>
+          </div>
+          <!-- Password strength meter -->
+          <div style="margin-top:8px">
+            <div style="height:4px;background:var(--bg-dark);border-radius:4px;overflow:hidden">
+              <div id="strength-bar" style="height:100%;width:0;background:#ddd;border-radius:4px;transition:width 0.3s,background 0.3s"></div>
+            </div>
+            <span id="strength-label" style="font-size:0.78rem;font-weight:600;margin-top:4px;display:block"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Confirm Password</label>
+          <div class="password-toggle">
+            <input type="password" id="confirm-password" placeholder="Re-enter your password" autocomplete="new-password">
+            <button type="button" id="toggleConfirm" class="toggle-eye">👁</button>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:1.2rem;font-size:0.88rem;color:var(--text-mid)">
+          <input type="checkbox" id="agree-terms" style="margin-top:3px;accent-color:var(--primary)">
+          <label for="agree-terms">I agree to the <a href="#" style="color:var(--primary);font-weight:600">Terms of Service</a> and <a href="#" style="color:var(--primary);font-weight:600">Privacy Policy</a></label>
+        </div>
+
+        <button type="submit" class="btn btn-dark btn-full btn-lg">Create Account</button>
+      </form>
+
+      <div class="auth-footer">
+        Already have an account? <a href="login.html">Sign in →</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

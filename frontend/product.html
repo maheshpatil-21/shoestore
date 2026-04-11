@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details — ShoeStore</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="product">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <span class="logo-icon">👟</span>
+        <span class="logo-text">ShoeStore</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+      </div>
+      <div class="nav-actions">
+        <a href="login.html">Login</a>
+        <a href="cart.html" class="cart-btn">
+          🛒 Cart <span class="cart-count" style="display:none">0</span>
+        </a>
+      </div>
+      <button class="hamburger"><span></span><span></span><span></span></button>
+    </div>
+    <div class="mobile-menu">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="cart.html">🛒 Cart</a>
+      <a href="login.html">Login</a>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <div style="background:var(--bg-light);padding:12px 2rem;">
+    <div class="breadcrumb" style="justify-content:flex-start;max-width:1280px;margin:0 auto;color:var(--text-light)">
+      <a href="index.html">Home</a>
+      <span class="sep">›</span>
+      <a href="products.html">Products</a>
+      <span class="sep">›</span>
+      <span id="breadcrumb-name">Product Details</span>
+    </div>
+  </div>
+
+  <!-- PRODUCT DETAIL -->
+  <div class="container" style="padding:2rem">
+    <div class="product-detail">
+
+      <!-- Gallery -->
+      <div class="product-gallery">
+        <div class="main-image">
+          <img id="main-img" src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800" alt="Product">
+        </div>
+        <div class="thumb-row">
+          <div class="thumb active"><img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200" alt="View 1"></div>
+          <div class="thumb"><img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200" alt="View 2"></div>
+          <div class="thumb"><img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200" alt="View 3"></div>
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div class="product-info">
+        <div class="product-category" id="product-category-label">Running</div>
+        <h1 id="product-name">Loading...</h1>
+
+        <div class="product-rating">
+          <div class="stars" id="product-stars">★★★★★</div>
+          <span class="rating-count" id="product-reviews">(0 reviews)</span>
+        </div>
+
+        <div class="product-price">
+          <span class="price-current" id="product-price">$0.00</span>
+          <span class="price-original" id="product-original-price" style="display:none"></span>
+        </div>
+
+        <p class="product-desc" id="product-desc">Loading product details...</p>
+
+        <!-- Size -->
+        <div class="size-section">
+          <span class="size-label">Size (US) <a href="#" style="font-size:0.8rem;color:var(--accent);font-weight:400;margin-left:8px">Size Guide</a></span>
+          <div class="size-options">
+  <button class="size-btn">7</button>
+  <button class="size-btn">8</button>
+  <button class="size-btn">9</button>
+  <button class="size-btn">10</button>
+  <button class="size-btn">11</button>
+  <button class="size-btn">12</button>
+</div>
+        </div>
+
+        <!-- Quantity -->
+        <div class="qty-section">
+          <span class="size-label" style="margin-bottom:0">Quantity</span>
+          <div class="qty-control">
+            <button class="qty-btn" id="qty-minus">−</button>
+            <input type="number" id="qty-input" class="qty-input" value="1" min="1" max="10">
+            <button class="qty-btn" id="qty-plus">+</button>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="detail-actions">
+          <button class="btn btn-dark btn-lg" id="add-to-cart-detail">🛒 Add to Cart</button>
+          <button class="btn btn-outline" style="color:var(--primary);border-color:var(--primary)" onclick="toggleWishlist(this)">♡ Wishlist</button>
+        </div>
+
+        <!-- Meta -->
+        <div class="product-meta">
+          <div class="meta-row">Category: <span id="meta-category">—</span></div>
+          <div class="meta-row">Availability: <span style="color:var(--success)">✓ In Stock</span></div>
+          <div class="meta-row">SKU: <span>SS-2025-001</span></div>
+          <div class="meta-row">Free shipping on orders over $100</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Products -->
+    <div style="margin-top:4rem">
+      <div class="section-header">
+        <span class="section-label">You may also like</span>
+        <h2>Related Products</h2>
+      </div>
+      <div class="products-grid" id="related-products"></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo-text">👟 ShoeStore</div>
+        <p>Premium footwear for every step of your journey.</p>
+      </div>
+      <div class="footer-col"><h4>Shop</h4><ul><li><a href="products.html">All Products</a></li></ul></div>
+      <div class="footer-col"><h4>Help</h4><ul><li><a href="#">Returns</a></li><li><a href="#">Size Guide</a></li></ul></div>
+      <div class="footer-col"><h4>Account</h4><ul><li><a href="login.html">Sign In</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2025 ShoeStore</span></div>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

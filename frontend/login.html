@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — ShoeStore</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="login">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <span class="logo-icon">👟</span><span class="logo-text">ShoeStore</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+      </div>
+      <div class="nav-actions">
+        <a href="cart.html" class="cart-btn">🛒 Cart <span class="cart-count" style="display:none">0</span></a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- AUTH PAGE -->
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <span class="logo-icon">👟</span>
+        <span class="logo-name">ShoeStore</span>
+      </div>
+
+      <h2>Welcome back</h2>
+      <p class="auth-sub">Sign in to your account to continue shopping</p>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <div class="password-toggle">
+            <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password">
+            <button type="button" id="togglePassword" class="toggle-eye">👁</button>
+          </div>
+        </div>
+
+        <a href="#" class="forgot-link">Forgot password?</a>
+
+        <button type="submit" class="btn btn-dark btn-full btn-lg">Sign In</button>
+      </form>
+
+      <div class="divider">or continue with</div>
+
+      <div style="display:flex;gap:0.8rem">
+        <button class="btn btn-full" style="background:var(--bg-light);border:none;color:var(--text-dark);gap:8px" onclick="Toast.show('Google sign-in (demo)', 'info')">
+          🌐 Google
+        </button>
+        <button class="btn btn-full" style="background:var(--bg-light);border:none;color:var(--text-dark);gap:8px" onclick="Toast.show('Facebook sign-in (demo)', 'info')">
+          📘 Facebook
+        </button>
+      </div>
+
+      <div class="auth-footer">
+        Don't have an account? <a href="signup.html">Create one free →</a>
+      </div>
+
+      <!-- Demo hint -->
+      <div style="background:var(--bg-light);border-radius:var(--radius-sm);padding:12px 14px;margin-top:1rem;font-size:0.82rem;color:var(--text-light)">
+        💡 <strong>Demo:</strong> Enter any email + password (6+ chars) to sign in
+      </div>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
