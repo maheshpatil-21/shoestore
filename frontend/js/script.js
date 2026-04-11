@@ -1,6 +1,6 @@
 let selectedSize = null;
 const CONFIG = {
-  API_BASE: 'http://localhost:5000/api',
+  API_BASE: 'https://shoestore-api-sx28.onrender.com/api',
   CART_KEY: 'shoestore_cart',
   USER_KEY: 'shoestore_user',
 };
