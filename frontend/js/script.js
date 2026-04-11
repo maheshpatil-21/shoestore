@@ -583,17 +583,16 @@ function setupCheckoutForm() {
     const btn = form.querySelector('button[type="submit"]');
     btn.disabled = true;
     btn.textContent = 'Processing...';
+const result = await API.post('/orders', orderData);
 
-    const result = await API.post('/orders', orderData);
-
-    if (result || true) {
-      Cart.clear();
-      showOrderSuccess();
-    } else {
-      Toast.show('Order failed. Please try again.', 'error');
-      btn.disabled = false;
-      btn.textContent = 'Place Order';
-    }
+if (result && result.success) {
+  Cart.clear();
+  showOrderSuccess();
+} else {
+  Toast.show('Order failed. Please try again.', 'error');
+  btn.disabled = false;
+  btn.textContent = 'Place Order';
+}
   });
 }
 
