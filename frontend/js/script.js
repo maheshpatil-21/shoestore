@@ -567,18 +567,14 @@ function setupCheckoutForm() {
     const { total } = Cart.totals();
     const user  = Auth.getUser();
 
-    const orderData = {
-      user_id: user?.id || null,
-      items: cart.map(item => ({
-        product_id: item.id,
-        product_name: item.name,
-        quantity: item.qty,
-        price: item.price
-      })),
-      total_price: total,
-      shipping: getFormData('shipping'),
-      payment: getFormData('payment'),
-    };
+const orderData = {
+  items: cart.map(item => ({
+    product_id: item.id,
+    quantity: item.qty,
+    price: item.price
+  })),
+  total: total
+};
 
     const btn = form.querySelector('button[type="submit"]');
     btn.disabled = true;
