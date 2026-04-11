@@ -161,10 +161,11 @@ const API = {
       if (!res.ok) throw new Error(data.message || 'Request failed');
       return data;
     } catch (err) {
-      // Fallback to mock data when backend isn't running
-      console.warn('API unavailable, using mock data:', err.message);
-      return null;
-    }
+  console.error("API ERROR:", err);
+  Toast.show(err.message, "error");
+  return null;
+}
+
   },
   get:    (endpoint)           => API.request(endpoint),
   post:   (endpoint, body)     => API.request(endpoint, { method: 'POST', body: JSON.stringify(body) }),
