@@ -52,11 +52,32 @@ RETURNING id`,
     // Insert order items
 for (const item of items) {
 
-  const productId   = item.product_id || item.id;
-  const productName = item.product_name || item.name;
-  const quantity    = item.quantity || item.qty;
+  const productId = item.product_id || item.id;
+
+  const productName =
+    item.product_name ||
+    item.name ||
+    item.title ||
+    "Unknown Product";
+
+  const quantity = item.quantity || item.qty || 1;
+
+  const price = parseFloat(item.price) || 0;
 
   await pool.query(
+    `INSERT INTO order_items
+    (order_id, product_id, product_name, size, quantity, unit_price)
+    VALUES ($1,$2,$3,$4,$5,$6)`,
+    [
+      orderId,
+      productId,
+      productName,
+      item.size || "M",
+      quantity,
+      price
+    ]
+  );
+}
     `INSERT INTO order_items
     (order_id,product_id,product_name,size,quantity,unit_price)
     VALUES ($1,$2,$3,$4,$5,$6)`,
