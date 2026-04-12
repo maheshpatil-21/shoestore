@@ -574,7 +574,19 @@ const orderData = {
     quantity: item.qty,
     price: item.price
   })),
-  total: total
+
+  shipping: {
+    name: document.getElementById("name").value,
+    email: document.getElementById("email").value,
+    address: document.getElementById("address").value,
+    city: document.getElementById("city").value,
+    zip: document.getElementById("zip").value,
+    country: document.getElementById("country").value
+  },
+
+  payment: {
+    method: "card"
+  }
 };
 
     const btn = form.querySelector('button[type="submit"]');
