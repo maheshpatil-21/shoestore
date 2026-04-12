@@ -37,11 +37,11 @@ RETURNING id`,
   user_id,
   total_price,
   "pending",
-  `${shipping?.first_name || ''} ${shipping?.last_name || ''}`,
+  `${shipping?.first_name || shipping?.name || ''}`,
   shipping?.email || '',
   shipping?.address || '',
   shipping?.city || '',
-  shipping?.zip || '',
+  shipping?.zip || shipping?.postal || '',
   shipping?.country || '',
   payment?.method || 'card'
 ]
@@ -52,13 +52,20 @@ RETURNING id`,
     // Insert order items
 for (const item of items) {
 
-  const productId = item.product_id || item.id;
+  const productId = item.product_id || item.productId || item.id;
 
-  const productName =
-    item.product_name ||
-    item.name ||
-    item.title ||
-    "Unknown Product";
+let productName = "Unknown Product";
+
+if (productId) {
+  const product = await pool.query(
+    "SELECT name FROM products WHERE id = $1",
+    [productId]
+  );
+
+  if (product.rows.length > 0) {
+    productName = product.rows[0].name;
+  }
+}
 
   const quantity = item.quantity || item.qty || 1;
 
