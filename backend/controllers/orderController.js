@@ -22,24 +22,24 @@ const createOrder = async (req, res) => {
     }
 
     // Insert order
-    const orderResult = await pool.query(
-      `INSERT INTO orders
-      (user_id,total_price,status,shipping_name,shipping_email,shipping_address,shipping_city,shipping_zip,shipping_country,payment_method)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
-      RETURNING id`,
-      [
-        user_id,
-        total_price,
-        "pending",
-        `${shipping.first_name} ${shipping.last_name}`,
-        shipping.email,
-        shipping.address,
-        shipping.city,
-        shipping.zip,
-        shipping.country,
-        payment.method
-      ]
-    );
+const orderResult = await pool.query(
+`INSERT INTO orders
+(user_id,total_price,status,shipping_name,shipping_email,shipping_address,shipping_city,shipping_zip,shipping_country,payment_method)
+VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+RETURNING id`,
+[
+  user_id,
+  total_price,
+  "pending",
+  `${shipping?.first_name || ''} ${shipping?.last_name || ''}`,
+  shipping?.email || '',
+  shipping?.address || '',
+  shipping?.city || '',
+  shipping?.zip || '',
+  shipping?.country || '',
+  payment?.method || 'card'
+]
+);
 
     const orderId = orderResult.rows[0].id;
 
