@@ -11,7 +11,13 @@ const pool = require('../config/database');
  */
 const createOrder = async (req, res) => {
   try {
-    const { items, total_price, shipping, payment } = req.body;
+    const { items, shipping, payment } = req.body;
+
+let total_price = 0;
+
+for (const item of items) {
+  total_price += (item.price * (item.quantity || item.qty || 1));
+}
     const user_id = null;
 
     if (!items || !items.length) {
