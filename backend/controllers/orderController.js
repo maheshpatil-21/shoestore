@@ -78,19 +78,7 @@ for (const item of items) {
     ]
   );
 }
-    `INSERT INTO order_items
-    (order_id,product_id,product_name,size,quantity,unit_price)
-    VALUES ($1,$2,$3,$4,$5,$6)`,
-    [
-      orderId,
-      productId,
-      productName,
-      item.size || "M",
-      quantity,
-      parseFloat(item.price)
-    ]
-  );
-}
+
 
     res.status(201).json({
       success: true,
