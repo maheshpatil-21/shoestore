@@ -10,67 +10,73 @@ const pool = require('../config/database');
  * Create a new order
  */
 const createOrder = async (req, res) => {
-  const conn = await pool.getConnection().catch(() => null);
   try {
     const { items, total_price, shipping, payment } = req.body;
-    const user_id = req.user?.id || null;
+    const user_id = null;
 
-    if (!items || !items.length)
-      return res.status(400).json({ success: false, message: 'Order must contain at least one item' });
+    if (!items || !items.length) {
+      return res.status(400).json({
+        success: false,
+        message: "Order must contain at least one item"
+      });
+    }
 
-    if (conn) {
-      await conn.beginTransaction();
+    // Insert order
+    const orderResult = await pool.query(
+      `INSERT INTO orders
+      (user_id,total_price,status,shipping_name,shipping_email,shipping_address,shipping_city,shipping_zip,shipping_country,payment_method)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+      RETURNING id`,
+      [
+        user_id,
+        total_price,
+        "pending",
+        `${shipping.first_name} ${shipping.last_name}`,
+        shipping.email,
+        shipping.address,
+        shipping.city,
+        shipping.zip,
+        shipping.country,
+        payment.method
+      ]
+    );
 
-      // Insert order
-      const [orderResult] = await conn.query(
-        'INSERT INTO orders (user_id, total_price, status, shipping_name, shipping_email, shipping_address, shipping_city, shipping_zip, shipping_country, payment_method) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [
-          user_id,
-          parseFloat(total_price),
-          'pending',
-          `${shipping?.first_name || ''} ${shipping?.last_name || ''}`.trim(),
-          shipping?.email || '',
-          shipping?.address || '',
-          shipping?.city || '',
-          shipping?.zip || '',
-          shipping?.country || '',
-          payment?.method || 'card',
-        ]
-      );
+    const orderId = orderResult.rows[0].id;
 
-      const orderId = orderResult.insertId;
-
-      // Insert order items
-      for (const item of items) {
+    // Insert order items
+for (const item of items) {
 
   const productId   = item.product_id || item.id;
   const productName = item.product_name || item.name;
   const quantity    = item.quantity || item.qty;
 
-  await conn.query(
-    'INSERT INTO order_items (order_id, product_id, product_name, size, quantity, unit_price) VALUES (?, ?, ?, ?, ?, ?)',
-    [orderId, productId, productName, item.size || 'M', quantity, parseFloat(item.price)]
-  );
-
-  await conn.query(
-    'UPDATE products SET stock = GREATEST(stock - ?, 0) WHERE id = ?',
-    [quantity, productId]
+  await pool.query(
+    `INSERT INTO order_items
+    (order_id,product_id,product_name,size,quantity,unit_price)
+    VALUES ($1,$2,$3,$4,$5,$6)`,
+    [
+      orderId,
+      productId,
+      productName,
+      item.size || "M",
+      quantity,
+      parseFloat(item.price)
+    ]
   );
 }
 
-      await conn.commit();
-      res.status(201).json({ success: true, message: 'Order placed successfully', orderId, data: { id: orderId, status: 'pending' } });
-    } else {
-      // Demo fallback when DB is offline
-      const demoOrderId = `SS-${Date.now()}`;
-      res.status(201).json({ success: true, message: 'Order placed (demo mode)', orderId: demoOrderId, data: { id: demoOrderId, status: 'pending' } });
-    }
+    res.status(201).json({
+      success: true,
+      message: "Order placed successfully",
+      orderId
+    });
+
   } catch (err) {
-    if (conn) await conn.rollback().catch(() => {});
-    console.error('createOrder error:', err.message);
-    res.status(500).json({ success: false, message: err.message });
-  } finally {
-    if (conn) conn.release();
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      message: err.message
+    });
   }
 };
 
@@ -80,15 +86,17 @@ const createOrder = async (req, res) => {
  */
 const getUserOrders = async (req, res) => {
   try {
-    const [orders] = await pool.query(
-      `SELECT o.*, GROUP_CONCAT(oi.product_name SEPARATOR ', ') AS item_names
-       FROM orders o
-       LEFT JOIN order_items oi ON o.id = oi.order_id
-       WHERE o.user_id = ?
-       GROUP BY o.id
-       ORDER BY o.created_at DESC`,
-      [req.user.id]
-    );
+    const result = await pool.query(
+`SELECT o.*, STRING_AGG(oi.product_name, ', ') AS item_names
+FROM orders o
+LEFT JOIN order_items oi ON o.id = oi.order_id
+WHERE o.user_id = $1
+GROUP BY o.id
+ORDER BY o.created_at DESC`,
+[req.user.id]
+);
+
+const orders = result.rows;
     res.json({ success: true, data: orders });
   } catch (err) {
     res.json({ success: true, data: [], message: 'Demo mode' });
@@ -104,11 +112,18 @@ const getAllOrders = async (req, res) => {
     const { status, page = 1, limit = 20 } = req.query;
     const offset = (parseInt(page) - 1) * parseInt(limit);
     let query = 'SELECT * FROM orders';
-    const params = [];
-    if (status) { query += ' WHERE status = ?'; params.push(status); }
-    query += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
-    params.push(parseInt(limit), offset);
-    const [orders] = await pool.query(query, params);
+const params = [];
+
+if (status) {
+  query += ' WHERE status = $1';
+  params.push(status);
+}
+
+query += ` ORDER BY created_at DESC LIMIT $${params.length+1} OFFSET $${params.length+2}`;
+params.push(parseInt(limit), offset);
+
+const result = await pool.query(query, params);
+const orders = result.rows;
     res.json({ success: true, data: orders });
   } catch (err) {
     res.json({ success: true, data: [], message: 'Demo mode' });
@@ -122,9 +137,17 @@ const getAllOrders = async (req, res) => {
 const getOrderById = async (req, res) => {
   try {
     const { id } = req.params;
-    const [orders] = await pool.query('SELECT * FROM orders WHERE id = ?', [id]);
+    const orderResult = await pool.query(
+'SELECT * FROM orders WHERE id = $1',
+[id]
+);
+const orders = orderResult.rows;
     if (!orders.length) return res.status(404).json({ success: false, message: 'Order not found' });
-    const [items] = await pool.query('SELECT * FROM order_items WHERE order_id = ?', [id]);
+    const itemResult = await pool.query(
+'SELECT * FROM order_items WHERE order_id = $1',
+[id]
+);
+const items = itemResult.rows;
     res.json({ success: true, data: { ...orders[0], items } });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -142,7 +165,10 @@ const updateOrderStatus = async (req, res) => {
     const valid = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
     if (!valid.includes(status))
       return res.status(400).json({ success: false, message: 'Invalid status value' });
-    await pool.query('UPDATE orders SET status = ? WHERE id = ?', [status, id]);
+    await pool.query(
+'UPDATE orders SET status = $1 WHERE id = $2',
+[status, id]
+);
     res.json({ success: true, message: `Order status updated to ${status}` });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
